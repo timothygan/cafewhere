@@ -9,68 +9,71 @@ import (
 	"github.com/timothygan/cafewhere/backend/internal/repository/cache"
 	"github.com/timothygan/cafewhere/backend/internal/repository/postgres"
 	"github.com/timothygan/cafewhere/backend/internal/services/osm"
-	"github.com/timothygan/cafewhere/backend/internal/services/yelp"
 	"github.com/timothygan/cafewhere/backend/internal/utils"
 )
 
-type CoffeeShopService struct {
+type CafeService struct {
 	repo        *postgres.CafeRepository
 	cacheRepo   *cache.RedisRepository
-	yelpClient  *yelp.Client
 	osmClient   *osm.Client
 	rateLimiter *utils.RateLimiter
 }
 
-func NewCoffeeShopService(repo *postgres.CafeRepository, cacheRepo *cache.RedisRepository, yelpClient *yelp.Client, osmClient *osm.Client, rateLimiter *utils.RateLimiter) *CoffeeShopService {
-	return &CoffeeShopService{
+func NewCafeService(repo *postgres.CafeRepository, cacheRepo *cache.RedisRepository, osmClient *osm.Client, rateLimiter *utils.RateLimiter) *CafeService {
+	return &CafeService{
 		repo:        repo,
 		cacheRepo:   cacheRepo,
-		yelpClient:  yelpClient,
 		osmClient:   osmClient,
 		rateLimiter: rateLimiter,
 	}
 }
 
-func (s *CoffeeShopService) SearchCafes(ctx context.Context, query string, lat, lon float64) ([]*models.Cafe, error) {
-	cacheKey := fmt.Sprintf("search:%s:%f:%f", query, lat, lon)
+func (s *CafeService) SearchCafes(ctx context.Context, lat, lon float64, radius int) ([]*models.Cafe, error) {
+	cacheKey := fmt.Sprintf("search:%f:%f:%d", lat, lon, radius)
+
+	// Try to get from cache
 	cachedShops, err := s.cacheRepo.Get(ctx, cacheKey)
 	if err == nil {
 		return cachedShops, nil
 	}
 
-	var shops []*models.Cafe
+	// If not in cache or error, fetch from OSM
 	if s.rateLimiter.Allow() {
-		shops, err = s.yelpClient.SearchCafes(ctx, query, lat, lon)
+		shops, err := s.osmClient.SearchCafes(ctx, lat, lon, radius)
 		if err != nil {
-			// Log the error
-			shops, err = s.osmClient.SearchCafes(ctx, query, lat, lon)
-			if err != nil {
-				return nil, err
-			}
+			return nil, fmt.Errorf("failed to fetch cafes: %w", err)
 		}
-	} else {
-		shops, err = s.osmClient.SearchCafes(ctx, query, lat, lon)
-		if err != nil {
-			return nil, err
+
+		// Cache the results
+		if err := s.cacheRepo.Set(ctx, cacheKey, shops, 1*time.Hour); err != nil {
+			// Log the error, but don't fail the request
+			fmt.Printf("Failed to cache coffee shops: %v", err)
 		}
+
+		return shops, nil
 	}
 
-	s.cacheRepo.Set(ctx, cacheKey, shops, 1*time.Hour)
-	return shops, nil
+	return nil, fmt.Errorf("rate limit exceeded")
 }
 
-func (s *CoffeeShopService) GetCafeDetails(ctx context.Context, id string) (*models.Cafe, error) {
-	cacheKey := fmt.Sprintf("shop:%s", id)
-	cachedShop, err := s.cacheRepo.Get(ctx, cacheKey)
+func (s *CafeService) GetCafeDetails(ctx context.Context, id string) ([]*models.Cafe, error) {
+	// First, try to get from cache
+	shop, err := s.cacheRepo.Get(ctx, id)
 	if err == nil {
-		return cachedShop, nil
+		return shop, nil
 	}
 
-	shop, err := s.repo.GetCafe(ctx, id)
+	// If not in cache, get from database
+	shop, err = s.repo.GetCafe(ctx, id)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get coffee shop details: %w", err)
 	}
 
-	s.cacheRepo.Set(ctx, cacheKey, shop, 24*time.Hour)
+	// Cache the result
+	if err := s.cacheRepo.Set(ctx, id, shop, 24*time.Hour); err != nil {
+		// Log the error, but don't fail the request
+		fmt.Printf("Failed to cache coffee shop details: %v", err)
+	}
+
 	return shop, nil
 }

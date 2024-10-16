@@ -6,13 +6,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
+	_ "github.com/lib/pq"
 	"github.com/timothygan/cafewhere/backend/internal/api"
 	"github.com/timothygan/cafewhere/backend/internal/config"
 	"github.com/timothygan/cafewhere/backend/internal/repository/cache"
 	"github.com/timothygan/cafewhere/backend/internal/repository/postgres"
 	"github.com/timothygan/cafewhere/backend/internal/services"
 	"github.com/timothygan/cafewhere/backend/internal/services/osm"
-	"github.com/timothygan/cafewhere/backend/internal/services/yelp"
 	"github.com/timothygan/cafewhere/backend/internal/utils"
 	"go.uber.org/zap"
 )
@@ -48,13 +48,12 @@ func main() {
 	repo := postgres.NewCafeRepository(db)
 	cacheRepo := cache.NewRedisRepository(redisClient)
 
-	// Initialize clients and services
-	yelpClient := yelp.NewClient(cfg.YelpAPIKey)
+	// Initialize OSM client and services
 	osmClient := osm.NewClient()
 	rateLimiter := utils.NewRateLimiter(5, 1) // 5 requests per second
 
-	service := services.NewCoffeeShopService(repo, cacheRepo, yelpClient, osmClient, rateLimiter)
-	handler := handlers.NewCoffeeShopHandler(service)
+	service := services.NewCafeService(repo, cacheRepo, osmClient, rateLimiter)
+	handler := handlers.NewCafeHandler(service)
 
 	// Set up Gin
 	r := gin.New()

@@ -9,19 +9,19 @@ import (
 )
 
 type CafeHandler struct {
-	service *services.CoffeeShopService
+	service *services.CafeService
 }
 
-func NewCafeHandler(service *services.CoffeeShopService) *CafeHandler {
+func NewCafeHandler(service *services.CafeService) *CafeHandler {
 	return &CafeHandler{service: service}
 }
 
 func (h *CafeHandler) SearchCafes(c *gin.Context) {
-	query := c.Query("q")
+	// query := c.Query("q")
 	lat, _ := strconv.ParseFloat(c.Query("lat"), 64)
 	lon, _ := strconv.ParseFloat(c.Query("lon"), 64)
 
-	shops, err := h.service.SearchCafes(c.Request.Context(), query, lat, lon)
+	shops, err := h.service.SearchCafes(c.Request.Context(), lat, lon, 5000)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

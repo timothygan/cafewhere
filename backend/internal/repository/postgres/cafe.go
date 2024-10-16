@@ -20,7 +20,7 @@ func (r *CafeRepository) SaveCafe(ctx context.Context, shop *models.Cafe) error 
 	return nil
 }
 
-func (r *CafeRepository) GetCafe(ctx context.Context, id string) (*models.Cafe, error) {
+func (r *CafeRepository) GetCafe(ctx context.Context, id string) ([]*models.Cafe, error) {
 	// Implement get logic
 	return nil, nil
 }
