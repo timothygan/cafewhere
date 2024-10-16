@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/timothygan/cafewhere/backend/internal/api/handlers"
 	"log"
 	"net/http"
 
@@ -28,8 +29,8 @@ func main() {
 	yelpClient := yelp.NewClient(cfg.YelpAPIKey)
 	osmClient := osm.NewClient()
 
-	service := services.NewCoffeeShopService(repo, yelpClient, osmClient)
-	handler := api.NewHandler(service)
+	service := services.NewCafeService(repo, yelpClient, osmClient)
+	handler := handlers.NewHandler(service)
 
 	router := api.SetupRoutes(handler)
 

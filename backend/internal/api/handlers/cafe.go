@@ -9,10 +9,10 @@ import (
 )
 
 type CafeHandler struct {
-	service *services.CoffeeShopService
+	service *services.CafeService
 }
 
-func NewCoffeeShopHandler(service *services.CoffeeShopService) *CafeHandler {
+func NewHandler(service *services.CafeService) *CafeHandler {
 	return &CafeHandler{service: service}
 }
 

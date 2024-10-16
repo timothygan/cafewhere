@@ -9,26 +9,26 @@ import (
 	"github.com/timothygan/cafewhere/backend/internal/services/yelp"
 )
 
-type CoffeeShopService struct {
-	repo       *postgres.CoffeeShopRepository
+type CafeService struct {
+	repo       *postgres.CafeRepository
 	yelpClient *yelp.Client
 	osmClient  *osm.Client
 }
 
-func NewCoffeeShopService(repo *postgres.CafeRepository, yelpClient *yelp.Client, osmClient *osm.Client) *CoffeeShopService {
-	return &CoffeeShopService{
+func NewCafeService(repo *postgres.CafeRepository, yelpClient *yelp.Client, osmClient *osm.Client) *CafeService {
+	return &CafeService{
 		repo:       repo,
 		yelpClient: yelpClient,
 		osmClient:  osmClient,
 	}
 }
 
-func (s *CoffeeShopService) SearchCoffeeShops(ctx context.Context, query string, lat, lon float64) ([]*models.CoffeeShop, error) {
+func (s *CafeService) SearchCoffeeShops(ctx context.Context, query string, lat, lon float64) ([]*models.Cafe, error) {
 	// Implement search logic using Yelp and OSM clients
 	return nil, nil
 }
 
-func (s *CoffeeShopService) GetCoffeeShopDetails(ctx context.Context, id string) (*models.CoffeeShop, error) {
+func (s *CafeService) GetCoffeeShopDetails(ctx context.Context, id string) (*models.Cafe, error) {
 	// Implement get details logic
 	return nil, nil
 }
