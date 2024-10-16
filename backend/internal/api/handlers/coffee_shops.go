@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/yourusername/coffee-shop-finder-backend/internal/services"
+	"github.com/timothygan/cafewhere/backend/internal/services"
 )
 
 type CafeHandler struct {

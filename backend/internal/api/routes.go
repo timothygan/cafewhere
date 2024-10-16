@@ -2,8 +2,8 @@ package api
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/yourusername/coffee-shop-finder-backend/internal/api/handlers"
-	"github.com/yourusername/coffee-shop-finder-backend/internal/api/middleware"
+	"github.com/timothygan/cafewhere/backend/internal/api/handlers"
+	"github.com/timothygan/cafewhere/backend/internal/api/middleware"
 )
 
 func SetupRoutes(h *handlers.CafeHandler) *mux.Router {

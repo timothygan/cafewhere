@@ -4,12 +4,12 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/yourusername/coffee-shop-finder-backend/internal/api"
-	"github.com/yourusername/coffee-shop-finder-backend/internal/config"
-	"github.com/yourusername/coffee-shop-finder-backend/internal/repository/postgres"
-	"github.com/yourusername/coffee-shop-finder-backend/internal/services"
-	"github.com/yourusername/coffee-shop-finder-backend/internal/services/osm"
-	"github.com/yourusername/coffee-shop-finder-backend/internal/services/yelp"
+	"github.com/timothygan/cafewhere/backend/internal/api"
+	"github.com/timothygan/cafewhere/backend/internal/config"
+	"github.com/timothygan/cafewhere/backend/internal/repository/postgres"
+	"github.com/timothygan/cafewhere/backend/internal/services"
+	"github.com/timothygan/cafewhere/backend/internal/services/osm"
+	"github.com/timothygan/cafewhere/backend/internal/services/yelp"
 )
 
 func main() {

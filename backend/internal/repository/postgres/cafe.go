@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/yourusername/coffee-shop-finder-backend/internal/models"
+	"github.com/timothygan/cafewhere/backend/internal/models"
 )
 
 type CafeRepository struct {

@@ -3,7 +3,7 @@ package osm
 import (
 	"context"
 
-	"github.com/yourusername/coffee-shop-finder-backend/internal/models"
+	"github.com/timothygan/cafewhere/backend/internal/models"
 )
 
 type Client struct{}

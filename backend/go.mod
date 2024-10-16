@@ -1,4 +1,4 @@
-module github.com/yourusername/coffee-shop-finder-backend
+module github.com/timothygan/cafewhere/backend
 
 go 1.16
 

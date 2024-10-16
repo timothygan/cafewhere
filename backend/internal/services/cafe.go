@@ -3,10 +3,10 @@ package services
 import (
 	"context"
 
-	"github.com/yourusername/coffee-shop-finder-backend/internal/models"
-	"github.com/yourusername/coffee-shop-finder-backend/internal/repository/postgres"
-	"github.com/yourusername/coffee-shop-finder-backend/internal/services/osm"
-	"github.com/yourusername/coffee-shop-finder-backend/internal/services/yelp"
+	"github.com/timothygan/cafewhere/backend/internal/models"
+	"github.com/timothygan/cafewhere/backend/internal/repository/postgres"
+	"github.com/timothygan/cafewhere/backend/internal/services/osm"
+	"github.com/timothygan/cafewhere/backend/internal/services/yelp"
 )
 
 type CoffeeShopService struct {
@@ -15,7 +15,7 @@ type CoffeeShopService struct {
 	osmClient  *osm.Client
 }
 
-func NewCoffeeShopService(repo *postgres.CoffeeShopRepository, yelpClient *yelp.Client, osmClient *osm.Client) *CoffeeShopService {
+func NewCoffeeShopService(repo *postgres.CafeRepository, yelpClient *yelp.Client, osmClient *osm.Client) *CoffeeShopService {
 	return &CoffeeShopService{
 		repo:       repo,
 		yelpClient: yelpClient,
