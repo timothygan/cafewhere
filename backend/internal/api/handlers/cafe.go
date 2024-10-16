@@ -1,43 +1,43 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
 	"github.com/timothygan/cafewhere/backend/internal/services"
 )
 
 type CafeHandler struct {
-	service *services.CafeService
+	service *services.CoffeeShopService
 }
 
-func NewHandler(service *services.CafeService) *CafeHandler {
+func NewCafeHandler(service *services.CoffeeShopService) *CafeHandler {
 	return &CafeHandler{service: service}
 }
 
-func (h *CafeHandler) SearchCoffeeShops(w http.ResponseWriter, r *http.Request) {
-	query := r.URL.Query().Get("q")
-	lat, _ := strconv.ParseFloat(r.URL.Query().Get("lat"), 64)
-	lon, _ := strconv.ParseFloat(r.URL.Query().Get("lon"), 64)
+func (h *CafeHandler) SearchCafes(c *gin.Context) {
+	query := c.Query("q")
+	lat, _ := strconv.ParseFloat(c.Query("lat"), 64)
+	lon, _ := strconv.ParseFloat(c.Query("lon"), 64)
 
-	shops, err := h.service.SearchCoffeeShops(r.Context(), query, lat, lon)
+	shops, err := h.service.SearchCafes(c.Request.Context(), query, lat, lon)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	json.NewEncoder(w).Encode(shops)
+	c.JSON(http.StatusOK, shops)
 }
 
-func (h *CafeHandler) GetCoffeeShopDetails(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
+func (h *CafeHandler) GetCafeDetails(c *gin.Context) {
+	id := c.Query("id")
 
-	shop, err := h.service.GetCoffeeShopDetails(r.Context(), id)
+	shop, err := h.service.GetCafeDetails(c.Request.Context(), id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	json.NewEncoder(w).Encode(shop)
+	c.JSON(http.StatusOK, shop)
 }

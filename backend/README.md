@@ -1,6 +1,6 @@
 # Coffee Shop Finder Backend
 
-This is the backend for the Coffee Shop Finder application. It provides APIs for searching and retrieving information about coffee shops.
+This is the backend for the Coffee Shop Finder application. It provides APIs for searching and retrieving information about cafes.
 
 ## Getting Started
 
@@ -11,8 +11,8 @@ This is the backend for the Coffee Shop Finder application. It provides APIs for
 
 ## API Endpoints
 
-- `GET /api/coffee-shops/search` - Search for coffee shops
-- `GET /api/coffee-shops/details` - Get details for a specific coffee shop
+- `GET /api/cafe/search` - Search for cafes
+- `GET /api/cafe/details` - Get details for a specific cafe
 
 ## Contributing
 

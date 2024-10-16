@@ -1,4 +1,4 @@
-CREATE TABLE coffee_shops (
+CREATE TABLE cafes (
                               id UUID PRIMARY KEY,
                               name VARCHAR(255) NOT NULL,
                               address TEXT NOT NULL,

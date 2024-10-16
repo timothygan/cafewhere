@@ -1,1 +1,1 @@
-DROP TABLE coffee_shops;
+DROP TABLE cafes;
